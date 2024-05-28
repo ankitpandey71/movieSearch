@@ -1,17 +1,12 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import Home from "./pages/Home";
+import React from "react";
+import { Box } from "@mui/material";
+import MovieFetch from "../src/components/MovieFetch";
 
-const App = () => {
+const App: React.FC = () => {
   return (
-    <Router>
-      <div style={{ display: "flex" }}>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </div>
-    </Router>
+    <Box sx={{ display: "flex" }}>
+      <MovieFetch />
+    </Box>
   );
 };
 
