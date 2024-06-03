@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <div>
       <Toolbar>
         <Typography variant="h6" noWrap>
-          Favorite Lists
+          Watch Lists
         </Typography>
       </Toolbar>
       <Divider />
@@ -130,7 +130,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+          keepMounted: true,
         }}
         sx={{
           display: { xs: "block", sm: "none" },

@@ -29,7 +29,7 @@ const FavoriteList: React.FC<FavoriteListProps> = ({
     <List
       subheader={
         <ListSubheader component="div" id="nested-list-subheader">
-          My Favorite Lists
+          My Watch Lists
         </ListSubheader>
       }
     >

@@ -8,7 +8,9 @@ const Header: React.FC = () => {
         <Typography variant="h4" color="primary" sx={{ flexGrow: 1 }}>
           Welcome to Watchlists
         </Typography>
-        <Button color="inherit">Guest</Button>
+        <Button variant="contained" color="inherit">
+          Guest
+        </Button>
       </Toolbar>
     </AppBar>
   );

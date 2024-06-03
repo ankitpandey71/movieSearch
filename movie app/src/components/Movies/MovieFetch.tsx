@@ -135,36 +135,6 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      {/* <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Movie App
-          </Typography>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, marginLeft: "auto" }}
-          >
-            {username}
-          </Typography>
-          <Button color="inherit" onClick={onLogout}>
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar> */}
       <Sidebar
         favoriteLists={favoriteLists}
         onSelectList={setSelectedList}
@@ -180,10 +150,24 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
-          // ml: { sm: `${drawerWidth}px` },
         }}
       >
-        {/* <Toolbar /> */}
+        <Box
+          sx={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            padding: "16px",
+            marginBottom: "16px",
+            textAlign: "center",
+          }}
+        >
+          <Typography color="red" variant="h4" component="h1" gutterBottom>
+            Welcome To Movie Search
+          </Typography>
+          <Typography variant="h6" component="p">
+            Browse Movies & add them to watch List
+          </Typography>
+        </Box>
         <Container>
           <SearchBar onSearch={handleSearch} />
           {error && <div className="text-red-600">{error}</div>}
@@ -196,7 +180,7 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
           />
         </Container>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>Add to Favorite List</DialogTitle>
+          <DialogTitle>Add to Watch List</DialogTitle>
           <DialogContent>
             <List>
               {Object.keys(favoriteLists).map((listName) => (
