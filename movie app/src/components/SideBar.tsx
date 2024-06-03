@@ -10,7 +10,8 @@ import {
   Toolbar,
   IconButton,
   Avatar,
-  Stack,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -23,6 +24,7 @@ interface SidebarProps {
   mobileOpen: boolean;
   handleDrawerToggle: () => void;
   username: string;
+  onLogOut: any;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -32,7 +34,18 @@ const Sidebar: React.FC<SidebarProps> = ({
   mobileOpen,
   handleDrawerToggle,
   username,
+  onLogOut,
 }) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const drawer = (
     <div>
       <Toolbar>
@@ -64,13 +77,40 @@ const Sidebar: React.FC<SidebarProps> = ({
         </ListItem>
       </List>
       <Box sx={{ flexGrow: 1 }} />
-      <Box sx={{ p: 2, display: "flex", alignItems: "center" }}>
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          p: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Avatar
           alt={username}
           src="/static/images/avatar/1.jpg"
           sx={{ mr: 2 }}
         />
         <Typography variant="body1">{username}</Typography>
+        <IconButton
+          aria-label="more"
+          aria-controls="menu"
+          aria-haspopup="true"
+          onClick={handleMenuClick}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Menu
+          id="menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={onLogOut}>Logout</MenuItem>
+        </Menu>
       </Box>
     </div>
   );
@@ -78,7 +118,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <Box
       component="nav"
-      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+      sx={{
+        width: { sm: drawerWidth },
+        flexShrink: { sm: 0 },
+        height: "100vh",
+      }}
       aria-label="mailbox folders"
     >
       <Drawer
@@ -90,7 +134,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         }}
         sx={{
           display: { xs: "block", sm: "none" },
-          "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+            height: "100vh",
+          },
         }}
       >
         {drawer}
@@ -99,7 +147,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         variant="permanent"
         sx={{
           display: { xs: "none", sm: "block" },
-          "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+            height: "100vh",
+          },
         }}
         open
       >

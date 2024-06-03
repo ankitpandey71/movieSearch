@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import MovieFetch from "../src/components/MovieFetch";
+import MovieFetch from "./components/Movies/MovieFetch";
 import Login from "../src/pages/Login";
 
 const App: React.FC = () => {
