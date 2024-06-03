@@ -16,6 +16,7 @@ import {
   AppBar,
   Typography,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "../SideBar";
@@ -56,6 +57,8 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchMade, setSearchMade] = useState<boolean>(false);
 
   useEffect(() => {
     const users = JSON.parse(localStorage.getItem("users") || "{}");
@@ -77,6 +80,8 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
   };
 
   const handleSearch = async (searchTerm: string) => {
+    setLoading(true);
+    setSearchMade(true);
     try {
       const { data } = await axios.get(
         `http://www.omdbapi.com/?s=${searchTerm}&apikey=3e3e4bd7`
@@ -92,6 +97,7 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
       setMovieData([]);
       setError(err.message);
     }
+    setLoading(false);
   };
 
   const addToFavorites = (movie: Movie, listName: string) => {
@@ -193,6 +199,26 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
         </Box>
         <Container>
           <SearchBar onSearch={handleSearch} />
+          {loading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              minHeight="50vh"
+            >
+              <CircularProgress />
+            </Box>
+          ) : searchMade && movieData.length === 0 ? (
+            <Typography variant="h6" align="center" color="textSecondary">
+              No movies found. Please try a different search term.
+            </Typography>
+          ) : (
+            !searchMade && (
+              <Typography variant="h6" align="center" color="textSecondary">
+                Make a search to find movies.
+              </Typography>
+            )
+          )}
           {error && <div className="text-red-600">{error}</div>}
           <MovieGrid
             movies={movieData}

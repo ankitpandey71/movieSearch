@@ -20,9 +20,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search for movies..."
-        sx={{ width: "60%", marginRight: 2 }}
+        sx={{ width: "60%", marginRight: 2, height: "56px" }}
       />
-      <Button type="submit" variant="contained" color="primary">
+      <Button
+        sx={{ height: "56px" }}
+        type="submit"
+        variant="contained"
+        color="primary"
+      >
         Search
       </Button>
     </form>
