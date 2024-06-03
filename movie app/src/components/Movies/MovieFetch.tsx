@@ -21,7 +21,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "../SideBar";
 import SearchBar from "../SearchBar";
 import MovieGrid from "./MovieGrid";
-import FavoriteList from "./FavoriteList";
 
 interface Movie {
   imdbID: string;
@@ -117,8 +116,12 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
   };
 
   const handleDialogOpen = (movie: Movie) => {
-    setSelectedMovie(movie);
-    setDialogOpen(true);
+    if (Object.keys(favoriteLists).length > 1) {
+      setSelectedMovie(movie);
+      setDialogOpen(true);
+    } else {
+      addToFavorites(movie, "Default");
+    }
   };
 
   const handleDialogClose = () => {
@@ -135,6 +138,25 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            Movie Search
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Sidebar
         favoriteLists={favoriteLists}
         onSelectList={setSelectedList}
@@ -142,7 +164,7 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
         username={username}
-        onLogOut={onLogout}
+        onLogout={onLogout}
       />
       <Box
         component="main"
@@ -152,6 +174,7 @@ const MovieFetch: React.FC<MovieFetchProps> = ({
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
+        <Toolbar />
         <Box
           sx={{
             border: "1px solid #ddd",
