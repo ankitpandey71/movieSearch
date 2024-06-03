@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Container,
@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "./SideBar";
-import Header from "./Header";
 import SearchBar from "./SearchBar";
 import MovieGrid from "./MovieGrid";
 import FavoriteList from "./FavoriteList";
@@ -37,17 +36,42 @@ interface FavoriteLists {
 
 const drawerWidth = 240;
 
-const MovieFetch: React.FC = () => {
+interface MovieFetchProps {
+  userEmail: string;
+  username: string;
+  onLogout: () => void;
+}
+
+const MovieFetch: React.FC<MovieFetchProps> = ({
+  userEmail,
+  username,
+  onLogout,
+}) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [movieData, setMovieData] = useState<Movie[]>([]);
   const [favoriteLists, setFavoriteLists] = useState<FavoriteLists>({
     Default: [],
   });
-  const [selectedList, setSelectedList] = useState<string | null>("Default");
+  const [selectedList, setSelectedList] = useState<string>("Default");
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    if (users[userEmail]) {
+      setFavoriteLists(users[userEmail].favoriteLists);
+    }
+  }, [userEmail]);
+
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    if (users[userEmail]) {
+      users[userEmail].favoriteLists = favoriteLists;
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+  }, [favoriteLists, userEmail]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -128,6 +152,17 @@ const MovieFetch: React.FC = () => {
           <Typography variant="h6" noWrap component="div">
             Movie App
           </Typography>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, marginLeft: "auto" }}
+          >
+            {username}
+          </Typography>
+          <Button color="inherit" onClick={onLogout}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Sidebar
@@ -136,6 +171,7 @@ const MovieFetch: React.FC = () => {
         onCreateList={createNewList}
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
+        username={username}
       />
       <Box
         component="main"
@@ -143,7 +179,7 @@ const MovieFetch: React.FC = () => {
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          // ml: { sm: `${drawerWidth}px` },
         }}
       >
         <Toolbar />
@@ -157,11 +193,6 @@ const MovieFetch: React.FC = () => {
             addToFavorites={handleDialogOpen}
             removeFromFavorites={removeFromFavorites}
           />
-          {/* <FavoriteList
-            favoriteLists={favoriteLists}
-            onSelectList={setSelectedList}
-            onRemoveMovie={removeFromFavorites}
-          /> */}
         </Container>
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
           <DialogTitle>Add to Favorite List</DialogTitle>
@@ -181,9 +212,7 @@ const MovieFetch: React.FC = () => {
             </List>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleDialogClose} color="primary">
-              Cancel
-            </Button>
+            <Button onClick={handleDialogClose}>Cancel</Button>
           </DialogActions>
         </Dialog>
       </Box>

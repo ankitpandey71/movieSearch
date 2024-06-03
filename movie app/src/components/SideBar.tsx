@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import {
+  Box,
   Drawer,
   List,
   ListItem,
   ListItemText,
-  ListSubheader,
-  Toolbar,
+  Typography,
   Divider,
+  Toolbar,
   IconButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  TextField,
+  Avatar,
+  Stack,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import MenuIcon from "@mui/icons-material/Menu";
+
+const drawerWidth = 240;
 
 interface SidebarProps {
   favoriteLists: { [key: string]: any };
@@ -23,9 +22,8 @@ interface SidebarProps {
   onCreateList: (listName: string) => void;
   mobileOpen: boolean;
   handleDrawerToggle: () => void;
+  username: string;
 }
-
-const drawerWidth = 240;
 
 const Sidebar: React.FC<SidebarProps> = ({
   favoriteLists,
@@ -33,37 +31,17 @@ const Sidebar: React.FC<SidebarProps> = ({
   onCreateList,
   mobileOpen,
   handleDrawerToggle,
+  username,
 }) => {
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [newListName, setNewListName] = useState<string>("");
-
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-    setNewListName("");
-  };
-
-  const handleCreateList = () => {
-    if (newListName) {
-      onCreateList(newListName);
-      handleDialogClose();
-    }
-  };
-
   const drawer = (
     <div>
-      <Toolbar />
+      <Toolbar>
+        <Typography variant="h6" noWrap>
+          Favorite Lists
+        </Typography>
+      </Toolbar>
       <Divider />
-      <List
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            My Favorite Lists
-          </ListSubheader>
-        }
-      >
+      <List>
         {Object.keys(favoriteLists).map((listName) => (
           <ListItem
             button
@@ -73,37 +51,36 @@ const Sidebar: React.FC<SidebarProps> = ({
             <ListItemText primary={listName} />
           </ListItem>
         ))}
-        <ListItem button onClick={handleDialogOpen}>
-          <ListItemText primary="Add New List" />
-          <AddIcon />
+        <ListItem
+          button
+          onClick={() => {
+            const newListName = prompt("Enter new list name");
+            if (newListName) {
+              onCreateList(newListName);
+            }
+          }}
+        >
+          <ListItemText primary="Create New List" />
         </ListItem>
       </List>
-      <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>Create New Favorite List</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="List Name"
-            fullWidth
-            value={newListName}
-            onChange={(e) => setNewListName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleCreateList} color="primary">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ p: 2, display: "flex", alignItems: "center" }}>
+        <Avatar
+          alt={username}
+          src="/static/images/avatar/1.jpg"
+          sx={{ mr: 2 }}
+        />
+        <Typography variant="body1">{username}</Typography>
+      </Box>
     </div>
   );
 
   return (
-    <nav aria-label="mailbox folders">
+    <Box
+      component="nav"
+      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+      aria-label="mailbox folders"
+    >
       <Drawer
         variant="temporary"
         open={mobileOpen}
@@ -128,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       >
         {drawer}
       </Drawer>
-    </nav>
+    </Box>
   );
 };
 
